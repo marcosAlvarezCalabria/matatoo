@@ -1,10 +1,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://lamamadelamamatattoo.netlify.app',
-  build: {
-    assets: 'assets',
-    inlineStylesheets: 'always',
-  },
+  // Cambia por el dominio final para URLs canónicas
+  site: 'https://lamamadelamamatattoo.com',
 });
-
