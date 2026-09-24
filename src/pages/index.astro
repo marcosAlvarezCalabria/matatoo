@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Estilos from '../components/Estilos.astro';
+import Archivo from '../components/Archivo.astro';
+import Estudio from '../components/Estudio.astro';
+import Proceso from '../components/Proceso.astro';
+import Formacion from '../components/Formacion.astro';
+import Sobre from '../components/Sobre.astro';
+import Cita from '../components/Cita.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base
+  title="María Acosta · Tatuadora de realismo en Madrid · lamamadelamama"
+  description="Retratos, mascotas y fauna en blanco y negro. Tatuajes de realismo black & grey en Madrid. Pide cita por WhatsApp."
+>
+  <Nav />
+  <Hero />
+  <Estilos />
+  <Archivo />
+  <Estudio />
+  <Proceso />
+  <Formacion />
+  <Sobre />
+  <Cita />
+  <Footer />
+</Base>
+
+<script>
+  import '../scripts/fx.ts';
+</script>
