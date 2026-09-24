@@ -19,8 +19,8 @@ function initReveal() {
     el.setAttribute('data-fx', '');
     if (reduce) return;
     const r = el.getBoundingClientRect();
-    if (r.top < innerHeight * .9 && r.bottom > 0) return;
     const parent = el.parentElement!;
+    if (!parent.hasAttribute('data-gal') && r.top < innerHeight * .9 && r.bottom > 0) return;
     if (parent.hasAttribute('data-gal')) {
       // Galería: cada fila entra desde un lateral, alternando
       const kids = [...parent.children].filter((k) => !(k as HTMLElement).hidden) as HTMLElement[];
@@ -29,9 +29,10 @@ function initReveal() {
       const rowKids = kids.filter((k) => k.offsetTop === el.offsetTop);
       const col = rowKids.indexOf(el), left = row % 2 === 0;
       const d = (left ? rowKids.length - 1 - col : col) * 110;
+      el.style.setProperty('--d', '0ms');
       el.style.opacity = '0';
-      el.style.transform = `translateX(${left ? '-' : ''}${Math.round(innerWidth * .35)}px)`;
-      el.style.transition = `opacity 1.4s cubic-bezier(.25,.1,.25,1) ${d}ms, transform 1.8s cubic-bezier(.16,1,.3,1) ${d}ms`;
+      el.style.translate = `${left ? '-' : ''}${Math.round(innerWidth * .45)}px 0`;
+      el.dataset.d = String(d);
       galPending.push(el);
       return;
     }
@@ -47,7 +48,12 @@ function checkGal() {
   galPending = galPending.filter((el) => {
     if (!el.isConnected) return false;
     const r = el.getBoundingClientRect();
-    if (r.top < innerHeight * .9 && r.bottom > 0) { reveal(el, 2800); return false; }
+    if (r.top < innerHeight * .62 && r.bottom > 0) {
+      el.style.setProperty('--d', (el.dataset.d || 0) + 'ms');
+      el.style.opacity = ''; el.style.translate = '';
+      setTimeout(() => el.style.removeProperty('--d'), 2800);
+      return false;
+    }
     return true;
   });
 }
