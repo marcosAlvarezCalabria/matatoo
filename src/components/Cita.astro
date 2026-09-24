@@ -34,7 +34,7 @@ import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/si
         <div class="map">
           <svg viewBox="0 0 200 420" role="group" aria-label="Mapa del cuerpo">
             <defs>
-              <clipPath id="lm-bodyclip"><path d={BODY_D} /><ellipse cx="100" cy="31" rx="16" ry="21" /></clipPath>
+              <clipPath id="lm-bodyclip"><path d={BODY_D} /></clipPath>
             </defs>
             <g clip-path="url(#lm-bodyclip)">
               {BODY.map((z) => (
@@ -42,7 +42,6 @@ import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/si
               ))}
             </g>
             <path d={BODY_D} fill="none" stroke="#1d1f20" stroke-width="1.2" stroke-linejoin="round" pointer-events="none" />
-            <ellipse cx="100" cy="31" rx="16" ry="21" fill="none" stroke="#1d1f20" stroke-width="1.2" pointer-events="none" />
             <path data-detail d={DETAIL_F} fill="none" stroke="#b7b7ba" stroke-width=".8" stroke-linecap="round" pointer-events="none" />
           </svg>
           <div class="stack" style="gap:10px">
