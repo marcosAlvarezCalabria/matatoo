@@ -82,7 +82,7 @@ img,video{display:block}
 /* Blanco y negro → color */
 [data-bw]{filter:grayscale(1) contrast(1.05);transition:filter 1.4s ease}
 [data-bw]:hover{filter:grayscale(0) contrast(1)}
-@media (hover:none){[data-bw]{filter:none}}
+@media (hover:none){[data-bw].in-focus{filter:grayscale(0) contrast(1)}}
 .gal>*{transition:opacity 1.4s var(--ease-io),filter 1.4s var(--ease-io),translate 1.8s var(--ease-out)!important;transition-delay:var(--d,0ms)!important;position:relative}
 @media (hover:hover){
   .gal.has-lift>*{opacity:.18!important;filter:blur(3px)!important}
