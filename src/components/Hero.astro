@@ -1,0 +1,22 @@
+---
+/* Segundos del vídeo en los que aparece la firma: el título se oculta para dejarla ver */
+const HIDE_FROM = 9.2, HIDE_TO = 14;
+---
+<header id="inicio" class="hero" data-dim>
+  <div class="hero-media">
+    <video data-hero-video data-par="0.1" data-hide-from={HIDE_FROM} data-hide-to={HIDE_TO}
+      src="/assets/hero.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  </div>
+  <div class="hero-shade" data-hero-fade></div>
+  <div class="hero-in wrap" data-hero-fade>
+    <div class="kicker">Tatuadora de realismo · Madrid</div>
+    <h1><span data-x="-0.25">María</span><span data-x="0.25">Acosta</span></h1>
+    <div class="hero-row">
+      <p>Retratos, mascotas y fauna en blanco y negro. Ahora, en estudio propio.</p>
+      <div class="btns">
+        <a href="#cita" class="btn btn-white">Pedir cita</a>
+        <a href="#archivo" class="btn btn-wline">Ver archivo</a>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,77 @@
+---
+import { PIECES, CATS } from '../data/site';
+const count = (k: string) => (k === 'todo' ? PIECES.length : PIECES.filter((p) => p.cat === k).length);
+---
+<section id="archivo" class="wrap sec">
+  <div class="arch-head" data-dim>
+    <div class="stack" style="gap:16px">
+      <div class="kicker">Archivo</div>
+      <h2 class="h2" data-reveal data-from="left">Luz, sombra y piel</h2>
+    </div>
+    <div class="filters" role="toolbar" aria-label="Filtrar archivo">
+      {CATS.map(([k, l]) => (
+        <button class="chip" data-filter={k} aria-pressed={k === 'todo' ? 'true' : 'false'}>{l}<span class="n">{count(k)}</span></button>
+      ))}
+    </div>
+  </div>
+  <div class="gal" data-gal>
+    {PIECES.map((p, i) => (
+      <button class="piece" data-reveal data-cat={p.cat} data-i={i} aria-label={`Ver ${p.title}`}>
+        <span class="lift" data-lift>
+          <img src={p.src} alt={p.title} loading="lazy" data-bw />
+          <span class="piece-cap"><span>{p.title}</span><span>{p.tag}</span></span>
+        </span>
+      </button>
+    ))}
+  </div>
+</section>
+
+<div class="lb" data-lb hidden role="dialog" aria-modal="true" aria-label="Pieza ampliada">
+  <img data-lb-img alt="" data-bw />
+  <div class="lb-bar">
+    <button data-lb-prev aria-label="Anterior">←</button>
+    <span><span data-lb-title></span> · <span class="t" data-lb-tag></span></span>
+    <button data-lb-next aria-label="Siguiente">→</button>
+  </div>
+  <button class="lb-close" data-lb-close>Cerrar ✕</button>
+</div>
+
+<script>
+  import { PIECES } from '../data/site';
+  const gal = document.querySelector<HTMLElement>('[data-gal]')!;
+  const items = [...gal.querySelectorAll<HTMLButtonElement>('.piece')];
+  const lb = document.querySelector<HTMLElement>('[data-lb]')!;
+  const img = lb.querySelector<HTMLImageElement>('[data-lb-img]')!;
+  let visible = items.map((_, i) => i), cur = -1;
+
+  document.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const k = b.dataset.filter!;
+      document.querySelectorAll('[data-filter]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      items.forEach((it) => (it.hidden = k !== 'todo' && it.dataset.cat !== k));
+      visible = items.filter((it) => !it.hidden).map((it) => +it.dataset.i!);
+      window.dispatchEvent(new Event('lm:relayout'));
+    })
+  );
+
+  const show = (pos: number) => {
+    cur = (pos + visible.length) % visible.length;
+    const p = PIECES[visible[cur]];
+    img.src = p.src; img.alt = p.title;
+    lb.querySelector('[data-lb-title]')!.textContent = p.title;
+    lb.querySelector('[data-lb-tag]')!.textContent = p.tag;
+    lb.hidden = false;
+  };
+  const close = () => { lb.hidden = true; cur = -1; };
+  items.forEach((it) => it.addEventListener('click', () => show(visible.indexOf(+it.dataset.i!))));
+  lb.addEventListener('click', close);
+  lb.querySelector('[data-lb-prev]')!.addEventListener('click', (e) => { e.stopPropagation(); show(cur - 1); });
+  lb.querySelector('[data-lb-next]')!.addEventListener('click', (e) => { e.stopPropagation(); show(cur + 1); });
+  img.addEventListener('click', (e) => e.stopPropagation());
+  window.addEventListener('keydown', (e) => {
+    if (cur < 0) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+</script>

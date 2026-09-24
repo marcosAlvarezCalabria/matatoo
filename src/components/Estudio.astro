@@ -1,0 +1,16 @@
+---
+import { FICHA } from '../data/site';
+---
+<section id="estudio" class="dark" data-dim>
+  <div class="wrap sec split">
+    <div class="frame" data-reveal><img data-par="0.15" data-bw src="/assets/lamama-post-4.jpg" alt="La puerta del nuevo estudio" style="object-position:center 70%" /></div>
+    <div class="stack">
+      <div class="kicker">Nuevo estudio · Madrid</div>
+      <h2 class="h2" data-reveal data-from="left">De mi habitación a mi propio estudio</h2>
+      <p class="lead">Un espacio pensado solo para realismo: sesiones largas, sin prisas y con la calidad por delante.</p>
+      <div class="ficha">
+        {FICHA.map((r) => (<div><span>{r.k}</span><span>{r.v}</span></div>))}
+      </div>
+    </div>
+  </div>
+</section>

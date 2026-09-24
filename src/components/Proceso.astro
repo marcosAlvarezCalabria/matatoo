@@ -1,0 +1,18 @@
+---
+import { STEPS } from '../data/site';
+---
+<section class="wrap sec">
+  <div class="stack" style="gap:16px;margin-bottom:56px">
+    <div class="kicker">Cómo trabajamos</div>
+    <h2 class="h2" data-reveal data-from="left">De la foto a la piel</h2>
+  </div>
+  <div class="steps">
+    {STEPS.map((s) => (
+      <div class="step" data-reveal>
+        <span class="n">{s.n}</span>
+        <h3>{s.t}</h3>
+        <p>{s.d}</p>
+      </div>
+    ))}
+  </div>
+</section>

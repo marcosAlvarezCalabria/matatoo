@@ -1,0 +1,120 @@
+---
+import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/site';
+---
+<section id="cita" class="cita">
+  <div class="wrap sec cita-grid">
+    <div class="stack" style="gap:28px">
+      <div class="kicker">Reservar sesión</div>
+      <h2 class="h2" data-reveal data-from="left">Cuéntame tu idea</h2>
+      <p class="lead" style="font-size:18px;max-width:34ch">Rellena esto y se abre WhatsApp con el mensaje listo. Adjunta tu foto de referencia en el chat.</p>
+      <a href={LINKS.whatsapp} target="_blank" rel="noopener" class="tel">{WHATSAPP_LABEL} ↗</a>
+    </div>
+
+    <form class="form" data-cita novalidate>
+      <div class="row2">
+        <label class="lbl">Nombre<input name="nombre" autocomplete="name" /></label>
+        <label class="lbl">Teléfono<input name="tel" type="tel" autocomplete="tel" /></label>
+      </div>
+
+      <div class="stack" style="gap:10px">
+        <span class="lbl">¿Qué quieres tatuarte?</span>
+        <div class="tipos">
+          {TIPOS.map((t) => (<button type="button" class="chip" data-tipo={t} aria-pressed="false">{t}</button>))}
+        </div>
+      </div>
+
+      <div class="stack" style="gap:12px">
+        <div class="map-head">
+          <span class="lbl">Marca la zona del cuerpo</span>
+          <div class="seg">
+            <button type="button" data-view="f" aria-pressed="true">Delante</button>
+            <button type="button" data-view="b" aria-pressed="false">Detrás</button>
+          </div>
+        </div>
+        <div class="map">
+          <svg viewBox="0 0 200 420" role="group" aria-label="Mapa del cuerpo">
+            <defs>
+              <clipPath id="lm-bodyclip"><path d={BODY_D} /><ellipse cx="100" cy="31" rx="16" ry="21" /></clipPath>
+            </defs>
+            <g clip-path="url(#lm-bodyclip)">
+              {BODY.map((z) => (
+                <rect data-k={z.k} data-f={z.f} data-b={z.b} x={z.x} y={z.y} width={z.w} height={z.h} aria-pressed="false" role="button" tabindex="0"><title>{z.f}</title></rect>
+              ))}
+            </g>
+            <path d={BODY_D} fill="none" stroke="#1d1f20" stroke-width="1.2" stroke-linejoin="round" pointer-events="none" />
+            <ellipse cx="100" cy="31" rx="16" ry="21" fill="none" stroke="#1d1f20" stroke-width="1.2" pointer-events="none" />
+            <path data-detail d={DETAIL_F} fill="none" stroke="#b7b7ba" stroke-width=".8" stroke-linecap="round" pointer-events="none" />
+          </svg>
+          <div class="stack" style="gap:10px">
+            <span class="lbl">Zonas marcadas</span>
+            <span class="empty" data-empty>Toca el cuerpo para marcar dónde quieres el tatuaje.</span>
+            <div class="picked" data-picked></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <label class="lbl">Tamaño aprox.<input name="tam" placeholder="15 cm" /></label>
+        <label class="lbl">Fecha preferida<input name="fecha" placeholder="Noviembre" /></label>
+      </div>
+      <label class="lbl">Tu idea<textarea name="idea" rows="3"></textarea></label>
+      <a href={LINKS.whatsapp} target="_blank" rel="noopener" class="btn btn-ink" data-send style="align-self:flex-start;margin-top:8px;padding:18px 32px">Enviar por WhatsApp →</a>
+      <span class="note">No se envía nada desde la web: solo se prepara el mensaje.</span>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { BODY, DETAIL_F, DETAIL_B, WHATSAPP } from '../data/site';
+  const form = document.querySelector<HTMLFormElement>('[data-cita]')!;
+  const send = form.querySelector<HTMLAnchorElement>('[data-send]')!;
+  const rects = [...form.querySelectorAll<SVGRectElement>('rect[data-k]')];
+  const picked = form.querySelector<HTMLElement>('[data-picked]')!;
+  const empty = form.querySelector<HTMLElement>('[data-empty]')!;
+  const detail = form.querySelector<SVGPathElement>('[data-detail]')!;
+  let tipo = '', view: 'f' | 'b' = 'f';
+  const zonas: string[] = [];
+
+  const labelOf = (id: string) => { const [v, k] = id.split(':'); const z = BODY.find((b) => b.k === k)!; return v === 'f' ? z.f : z.b; };
+
+  const update = () => {
+    rects.forEach((r) => {
+      r.setAttribute('aria-pressed', String(zonas.includes(`${view}:${r.dataset.k}`)));
+      r.querySelector('title')!.textContent = view === 'f' ? r.dataset.f! : r.dataset.b!;
+    });
+    detail.setAttribute('d', view === 'f' ? DETAIL_F : DETAIL_B);
+    empty.hidden = zonas.length > 0;
+    picked.replaceChildren(...zonas.map((id) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.innerHTML = `${labelOf(id)}<span style="opacity:.6">✕</span>`;
+      b.onclick = () => toggle(id); return b;
+    }));
+    const f = new FormData(form);
+    const g = (k: string) => String(f.get(k) || '').trim();
+    const msg = ['Hola María, quiero pedir cita.',
+      g('nombre') && `Nombre: ${g('nombre')}`, g('tel') && `Teléfono: ${g('tel')}`, tipo && `Tipo: ${tipo}`,
+      zonas.length && `Zona: ${zonas.map(labelOf).join(', ')}`, g('tam') && `Tamaño aprox.: ${g('tam')}`,
+      g('fecha') && `Fecha preferida: ${g('fecha')}`, g('idea') && `Idea: ${g('idea')}`].filter(Boolean).join('\n');
+    send.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+  };
+  const toggle = (id: string) => { const i = zonas.indexOf(id); i >= 0 ? zonas.splice(i, 1) : zonas.push(id); update(); };
+
+  rects.forEach((r) => {
+    const act = () => toggle(`${view}:${r.dataset.k}`);
+    r.addEventListener('click', act);
+    r.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+  });
+  form.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.addEventListener('click', () => {
+    view = b.dataset.view as 'f' | 'b';
+    form.querySelectorAll('[data-view]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    update();
+  }));
+  form.querySelectorAll<HTMLButtonElement>('[data-tipo]').forEach((b) => b.addEventListener('click', () => {
+    tipo = tipo === b.dataset.tipo ? '' : b.dataset.tipo!;
+    form.querySelectorAll<HTMLElement>('[data-tipo]').forEach((o) => o.setAttribute('aria-pressed', String(o.dataset.tipo === tipo)));
+    update();
+  }));
+  form.addEventListener('input', update);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  update();
+</script>

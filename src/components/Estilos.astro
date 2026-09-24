@@ -1,0 +1,8 @@
+---
+const words = ['Retrato', 'Mascotas', 'Fauna', 'Black & grey', 'Retrato', 'Mascotas', 'Fauna'];
+---
+<div class="strip" data-dim>
+  <div class="strip-line" data-x="0.4">
+    {words.map((w, i) => (<>{i > 0 && <span>·</span>}<span>{w}</span></>))}
+  </div>
+</div>
