@@ -123,3 +123,14 @@ if (!reduce) {
   addEventListener('resize', onScroll);
   tick();
 }
+
+/* ---------- Móvil: B/N → color al pasar por el centro de la pantalla ---------- */
+if (!canHover) {
+  const focusIO = new IntersectionObserver(
+    (es) => es.forEach((e) => e.target.classList.toggle('in-focus', e.isIntersecting)),
+    { rootMargin: '-40% 0px -40% 0px' }
+  );
+  const watchBW = () => document.querySelectorAll('[data-bw]').forEach((el) => focusIO.observe(el));
+  watchBW();
+  addEventListener('lm:relayout', watchBW);
+}
