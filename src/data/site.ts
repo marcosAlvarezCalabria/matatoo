@@ -10,6 +10,13 @@ export const LINKS = {
 
 export type Cat = 'retratos' | 'fauna' | 'pop' | 'proyectos';
 export const PIECES: { src: string; title: string; tag: string; cat: Cat }[] = [
+  { src: '/assets/lamama-post-18.jpg', title: 'Tigre', tag: 'Pecho', cat: 'fauna' },
+  { src: '/assets/lamama-post-17.jpg', title: 'Rostro', tag: 'Antebrazo', cat: 'retratos' },
+  { src: '/assets/lamama-post-21.jpg', title: 'Cristo', tag: 'Antebrazo', cat: 'retratos' },
+  { src: '/assets/lamama-post-20.jpg', title: 'Águila', tag: 'Brazo', cat: 'fauna' },
+  { src: '/assets/lamama-post-22.jpg', title: 'Velo', tag: 'Brazo', cat: 'retratos' },
+  { src: '/assets/lamama-post-19.jpg', title: 'Catrina', tag: 'Pierna', cat: 'retratos' },
+  { src: '/assets/lamama-post-23.jpg', title: 'Husky', tag: 'Mascota', cat: 'fauna' },
   { src: '/assets/lamama-post-14.jpg', title: 'Gorila', tag: 'Fauna', cat: 'fauna' },
   { src: '/assets/lamama-post-6.jpg', title: 'Retrato', tag: 'Pierna', cat: 'retratos' },
   { src: '/assets/lamama-post-11.jpg', title: 'Horus', tag: 'Mascota', cat: 'fauna' },
@@ -45,21 +52,19 @@ export const TIPOS = ['Retrato', 'Mascota', 'Fauna', 'Pop / color', 'Proyecto gr
 
 /* Mapa del cuerpo: zonas rectangulares recortadas por la silueta. f = etiqueta delante, b = detrás */
 const Z = (k: string, x: number, y: number, w: number, h: number, f: string, b: string) => ({ k, x, y, w, h, f, b });
-export const BODY = [
-  Z('cabeza', 70, 0, 60, 51, 'Cabeza', 'Nuca'), Z('cuello', 80, 51, 40, 15, 'Cuello', 'Cuello (detrás)'),
-  Z('torso', 66, 66, 68, 62, 'Pecho', 'Espalda alta'),
-  Z('hombroA', 30, 62, 50, 40, 'Hombro der.', 'Hombro izq.'), Z('hombroB', 120, 62, 50, 40, 'Hombro izq.', 'Hombro der.'),
-  Z('abdomen', 56, 128, 88, 56, 'Abdomen', 'Espalda baja'),
-  Z('brazoA', 20, 102, 48, 58, 'Brazo der.', 'Brazo izq. (detrás)'), Z('brazoB', 132, 102, 48, 58, 'Brazo izq.', 'Brazo der. (detrás)'),
-  Z('antebrazoA', 16, 160, 56, 64, 'Antebrazo der.', 'Antebrazo izq. (detrás)'), Z('antebrazoB', 128, 160, 56, 64, 'Antebrazo izq.', 'Antebrazo der. (detrás)'),
-  Z('manoA', 16, 224, 56, 46, 'Mano der.', 'Mano izq. (dorso)'), Z('manoB', 128, 224, 56, 46, 'Mano izq.', 'Mano der. (dorso)'),
-  Z('cadera', 56, 184, 88, 42, 'Cadera', 'Glúteos'),
-  Z('musloA', 56, 226, 44, 82, 'Muslo der.', 'Muslo izq. (detrás)'), Z('musloB', 100, 226, 44, 82, 'Muslo izq.', 'Muslo der. (detrás)'),
-  Z('piernaA', 56, 308, 44, 84, 'Espinilla der.', 'Gemelo izq.'), Z('piernaB', 100, 308, 44, 84, 'Espinilla izq.', 'Gemelo der.'),
-  Z('pieA', 56, 392, 44, 28, 'Pie der.', 'Talón izq.'), Z('pieB', 100, 392, 44, 28, 'Pie izq.', 'Talón der.'),
-];
+export const BODY = [Z('cabeza',60,0,80,62,'Cabeza','Nuca'),Z('cuello',80,62,40,16,'Cuello','Cuello (detrás)'),
+ Z('torso',66,78,68,52,'Pecho','Espalda alta'),
+ Z('hombroA',20,76,56,36,'Hombro der.','Hombro izq.'),Z('hombroB',124,76,56,36,'Hombro izq.','Hombro der.'),
+ Z('abdomen',60,130,80,54,'Abdomen','Espalda baja'),
+ Z('brazoA',20,112,50,46,'Brazo der.','Brazo izq. (detrás)'),Z('brazoB',130,112,50,46,'Brazo izq.','Brazo der. (detrás)'),
+ Z('antebrazoA',16,158,52,64,'Antebrazo der.','Antebrazo izq. (detrás)'),Z('antebrazoB',132,158,52,64,'Antebrazo izq.','Antebrazo der. (detrás)'),
+ Z('manoA',16,222,52,50,'Mano der.','Mano izq. (dorso)'),Z('manoB',132,222,52,50,'Mano izq.','Mano der. (dorso)'),
+ Z('cadera',60,184,80,50,'Cadera','Glúteos'),
+ Z('musloA',60,234,40,74,'Muslo der.','Muslo izq. (detrás)'),Z('musloB',100,234,40,74,'Muslo izq.','Muslo der. (detrás)'),
+ Z('piernaA',60,308,40,78,'Espinilla der.','Gemelo izq.'),Z('piernaB',100,308,40,78,'Espinilla izq.','Gemelo der.'),
+ Z('pieA',60,386,40,34,'Pie der.','Talón izq.'),Z('pieB',100,386,40,34,'Pie izq.','Talón der.')];
 
-const HALF: [number, number][] = [[107,50],[108,62],[118,68],[134,73],[145,82],[149,98],[151,122],[153,146],[156,162],[159,186],[161,210],[163,224],[168,236],[168,252],[162,264],[155,262],[151,248],[150,232],[148,220],[143,194],[139,168],[137,146],[135,124],[132,110],[131,130],[127,160],[127,176],[133,196],[136,218],[135,250],[130,286],[126,306],[129,332],[125,364],[119,388],[124,402],[124,410],[106,412],[104,398],[106,386],[104,352],[103,312],[104,272],[102,238],[100,228]];
+const HALF: [number, number][] = [[100,6],[109,8],[115,14],[118,24],[118,34],[116,44],[112,53],[107,60],[108,67],[110,74],[118,78],[130,82],[140,86],[147,94],[150,106],[151,122],[150,140],[152,156],[156,172],[158,190],[157,210],[156,222],[159,232],[161,246],[159,258],[154,266],[149,262],[147,250],[144,234],[146,224],[149,218],[148,200],[146,182],[142,166],[139,152],[138,136],[137,120],[134,108],[132,114],[130,130],[126,150],[122,166],[127,186],[132,204],[134,222],[133,242],[130,266],[126,290],[123,306],[125,322],[127,338],[124,358],[118,384],[120,396],[126,404],[126,410],[116,413],[106,411],[105,400],[107,388],[106,368],[104,346],[106,330],[106,310],[105,290],[104,266],[103,244],[100,234]];
 const catmull = (pts: [number, number][]) => {
   const n = pts.length; let d = `M${pts[0][0]},${pts[0][1]}`;
   for (let i = 0; i < n; i++) {
@@ -69,6 +74,6 @@ const catmull = (pts: [number, number][]) => {
   }
   return d + 'Z';
 };
-export const BODY_D = catmull([...HALF, ...HALF.slice(0, -1).reverse().map(([x, y]) => [200 - x, y] as [number, number])]);
-export const DETAIL_F = 'M88,82 Q100,90 112,82 M84,112 Q92,122 100,116 Q108,122 116,112 M100,140 L100,176 M86,200 Q100,214 114,200';
-export const DETAIL_B = 'M100,68 L100,196 M78,96 Q86,106 94,100 M122,96 Q114,106 106,100 M100,200 L100,224 M82,222 Q92,230 100,224 Q108,230 118,222';
+export const BODY_D = catmull([...HALF, ...HALF.slice(1, -1).reverse().map(([x, y]) => [200 - x, y] as [number, number])]);
+export const DETAIL_F = 'M84,86 Q92,91 99,88 M101,88 Q108,91 116,86 M86,114 Q93,125 100,120 Q107,125 114,114 M100,132 L100,166 M99,172 Q100,175 101,172 M88,202 Q94,212 99,218 M101,218 Q106,212 112,202 M82,302 Q85,307 89,303 M111,303 Q115,307 118,302';
+export const DETAIL_B = 'M100,80 L100,198 M82,98 Q86,114 96,110 M118,98 Q114,114 104,110 M100,206 L100,232 M84,228 Q92,238 100,232 Q108,238 116,228 M83,308 Q86,304 89,308 M111,308 Q114,304 117,308';
