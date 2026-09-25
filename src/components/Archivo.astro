@@ -24,6 +24,7 @@ const count = (k: string) => (k === 'todo' ? PIECES.length : PIECES.filter((p) =
       </button>
     ))}
   </div>
+  <div class="swipe" aria-hidden="true"><span data-swipe-n></span><span>Desliza →</span></div>
 </section>
 
 <div class="lb" data-lb hidden role="dialog" aria-modal="true" aria-label="Pieza ampliada">
@@ -50,9 +51,22 @@ const count = (k: string) => (k === 'todo' ? PIECES.length : PIECES.filter((p) =
       document.querySelectorAll('[data-filter]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
       items.forEach((it) => (it.hidden = k !== 'todo' && it.dataset.cat !== k));
       visible = items.filter((it) => !it.hidden).map((it) => +it.dataset.i!);
+      gal.scrollTo({ left: 0 }); counter();
       window.dispatchEvent(new Event('lm:relayout'));
     })
   );
+
+  /* Contador del carrusel en móvil */
+  const nEl = document.querySelector<HTMLElement>('[data-swipe-n]')!;
+  const counter = () => {
+    const vis = items.filter((it) => !it.hidden);
+    if (!vis.length) return (nEl.textContent = '');
+    const w = vis[0].getBoundingClientRect().width + 12;
+    const i = Math.min(vis.length, Math.round(gal.scrollLeft / w) + 1);
+    nEl.textContent = `${String(i).padStart(2, '0')} / ${String(vis.length).padStart(2, '0')}`;
+  };
+  gal.addEventListener('scroll', counter, { passive: true });
+  counter();
 
   const show = (pos: number) => {
     cur = (pos + visible.length) % visible.length;

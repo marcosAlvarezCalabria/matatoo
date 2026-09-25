@@ -22,6 +22,16 @@ function initReveal() {
     const parent = el.parentElement!;
     if (!parent.hasAttribute('data-gal') && r.top < innerHeight * .9 && r.bottom > 0) return;
     if (parent.hasAttribute('data-gal')) {
+      if (matchMedia('(max-width:759px)').matches) {
+        // Carrusel en móvil: aparición suave desde abajo, sin entrar por los lados
+        const col = [...parent.children].filter((k) => !(k as HTMLElement).hidden).indexOf(el);
+        el.style.setProperty('--d', '0ms');
+        el.style.opacity = '0';
+        el.style.translate = '0 40px';
+        el.dataset.d = String(Math.min(col, 3) * 120);
+        galPending.push(el);
+        return;
+      }
       // Galería: cada fila entra desde un lateral, alternando
       const kids = [...parent.children].filter((k) => !(k as HTMLElement).hidden) as HTMLElement[];
       const tops = [...new Set(kids.map((k) => k.offsetTop))].sort((a, b) => a - b);
