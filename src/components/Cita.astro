@@ -1,5 +1,5 @@
 ---
-import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/site';
+import { TIPOS, LINKS, WHATSAPP_LABEL } from '../data/site';
 ---
 <section id="cita" class="cita">
   <div class="wrap sec cita-grid">
@@ -24,31 +24,14 @@ import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/si
       </div>
 
       <div class="stack" style="gap:12px">
-        <div class="map-head">
-          <span class="lbl">Marca la zona del cuerpo</span>
-          <div class="seg">
-            <button type="button" data-view="f" aria-pressed="true">Delante</button>
-            <button type="button" data-view="b" aria-pressed="false">Detrás</button>
-          </div>
-        </div>
-        <div class="map">
-          <svg viewBox="0 0 200 420" role="group" aria-label="Mapa del cuerpo">
-            <defs>
-              <clipPath id="lm-bodyclip"><path d={BODY_D} /></clipPath>
-            </defs>
-            <g clip-path="url(#lm-bodyclip)">
-              {BODY.map((z) => (
-                <rect data-k={z.k} data-f={z.f} data-b={z.b} x={z.x} y={z.y} width={z.w} height={z.h} aria-pressed="false" role="button" tabindex="0"><title>{z.f}</title></rect>
-              ))}
-            </g>
-            <path d={BODY_D} fill="none" stroke="#1d1f20" stroke-width="1.2" stroke-linejoin="round" pointer-events="none" />
-            <path data-detail d={DETAIL_F} fill="none" stroke="#b7b7ba" stroke-width=".8" stroke-linecap="round" pointer-events="none" />
-          </svg>
-          <div class="stack" style="gap:10px">
-            <span class="lbl">Zonas marcadas</span>
-            <span class="empty" data-empty>Toca el cuerpo para marcar dónde quieres el tatuaje.</span>
-            <div class="picked" data-picked></div>
-          </div>
+        <span class="lbl">Zona del cuerpo</span>
+        <div class="zona">
+          <button type="button" class="zona-open" data-zona3d>
+            <span class="zona-t">Marcar zona en 3D</span>
+            <span class="zona-s">Gira el cuerpo y toca dónde quieres el tatuaje →</span>
+          </button>
+          <span class="empty" data-empty>Aún no has marcado ninguna zona.</span>
+          <div class="picked" data-picked></div>
         </div>
       </div>
 
@@ -63,51 +46,49 @@ import { TIPOS, BODY, BODY_D, DETAIL_F, LINKS, WHATSAPP_LABEL } from '../data/si
   </div>
 </section>
 
+<script is:inline src="/tattoo-reserva.js" defer></script>
 <script>
-  import { BODY, DETAIL_F, DETAIL_B, WHATSAPP } from '../data/site';
+  import { WHATSAPP } from '../data/site';
   const form = document.querySelector<HTMLFormElement>('[data-cita]')!;
   const send = form.querySelector<HTMLAnchorElement>('[data-send]')!;
-  const rects = [...form.querySelectorAll<SVGRectElement>('rect[data-k]')];
   const picked = form.querySelector<HTMLElement>('[data-picked]')!;
   const empty = form.querySelector<HTMLElement>('[data-empty]')!;
-  const detail = form.querySelector<SVGPathElement>('[data-detail]')!;
-  let tipo = '', view: 'f' | 'b' = 'f';
-  const zonas: string[] = [];
-
-  const labelOf = (id: string) => { const [v, k] = id.split(':'); const z = BODY.find((b) => b.k === k)!; return v === 'f' ? z.f : z.b; };
+  const openBtn = form.querySelector<HTMLButtonElement>('[data-zona3d]')!;
+  const tam = form.querySelector<HTMLInputElement>('input[name="tam"]')!;
+  let tipo = '', cuerpo = '', autoTam = '';
+  let zonas: { id: string; name: string }[] = [];
 
   const update = () => {
-    rects.forEach((r) => {
-      r.setAttribute('aria-pressed', String(zonas.includes(`${view}:${r.dataset.k}`)));
-      r.querySelector('title')!.textContent = view === 'f' ? r.dataset.f! : r.dataset.b!;
-    });
-    detail.setAttribute('d', view === 'f' ? DETAIL_F : DETAIL_B);
     empty.hidden = zonas.length > 0;
-    picked.replaceChildren(...zonas.map((id) => {
+    openBtn.querySelector('.zona-t')!.textContent = zonas.length ? 'Cambiar zonas en 3D' : 'Marcar zona en 3D';
+    picked.replaceChildren(...zonas.map((z) => {
       const b = document.createElement('button');
-      b.type = 'button'; b.innerHTML = `${labelOf(id)}<span style="opacity:.6">✕</span>`;
-      b.onclick = () => toggle(id); return b;
+      b.type = 'button'; b.innerHTML = `${z.name}<span style="opacity:.6">✕</span>`;
+      b.setAttribute('aria-label', `Quitar ${z.name}`);
+      b.onclick = () => { zonas = zonas.filter((o) => o.id !== z.id); update(); };
+      return b;
     }));
     const f = new FormData(form);
     const g = (k: string) => String(f.get(k) || '').trim();
     const msg = ['Hola María, quiero pedir cita.',
       g('nombre') && `Nombre: ${g('nombre')}`, g('tel') && `Teléfono: ${g('tel')}`, tipo && `Tipo: ${tipo}`,
-      zonas.length && `Zona: ${zonas.map(labelOf).join(', ')}`, g('tam') && `Tamaño aprox.: ${g('tam')}`,
+      zonas.length && `Zona: ${zonas.map((z) => z.name).join(', ')}`, g('tam') && `Tamaño aprox.: ${g('tam')}`,
       g('fecha') && `Fecha preferida: ${g('fecha')}`, g('idea') && `Idea: ${g('idea')}`].filter(Boolean).join('\n');
     send.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
   };
-  const toggle = (id: string) => { const i = zonas.indexOf(id); i >= 0 ? zonas.splice(i, 1) : zonas.push(id); update(); };
 
-  rects.forEach((r) => {
-    const act = () => toggle(`${view}:${r.dataset.k}`);
-    r.addEventListener('click', act);
-    r.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+  openBtn.addEventListener('click', () => {
+    const q = new URLSearchParams({ modo: 'form', sel: zonas.map((z) => z.id).join(',') });
+    if (cuerpo) q.set('cuerpo', cuerpo);
+    (window as any).TattooReserva?.open({ src: `/reserva/index.html?${q}` });
   });
-  form.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.addEventListener('click', () => {
-    view = b.dataset.view as 'f' | 'b';
-    form.querySelectorAll('[data-view]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  window.addEventListener('tattoo-reserva:zonas', (e) => {
+    const d = (e as CustomEvent).detail as { ids: string[]; zonas: string[]; tamano: string; cuerpo: string };
+    zonas = d.ids.map((id, i) => ({ id, name: d.zonas[i] }));
+    cuerpo = d.cuerpo;
+    if (!tam.value.trim() || tam.value === autoTam) { tam.value = autoTam = d.tamano; }
     update();
-  }));
+  });
   form.querySelectorAll<HTMLButtonElement>('[data-tipo]').forEach((b) => b.addEventListener('click', () => {
     tipo = tipo === b.dataset.tipo ? '' : b.dataset.tipo!;
     form.querySelectorAll<HTMLElement>('[data-tipo]').forEach((o) => o.setAttribute('aria-pressed', String(o.dataset.tipo === tipo)));
